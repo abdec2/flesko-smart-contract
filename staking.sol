@@ -853,7 +853,6 @@ contract Staking is Ownable {
         require(_stake <= tempStake.amount, "Invalid Stake Amount");
         uint256 _investorReward = getDailyRewards(_stakePeriod);
         tempStake.amount = tempStake.amount.sub(_stake);
-        tempStake.timestamp = block.timestamp;
         stakes[msg.sender][_stakePeriod] = tempStake;
         totalStake = totalStake.sub(_stake);
         totalRewards = totalRewards.add(_investorReward);
@@ -873,8 +872,8 @@ contract Staking is Ownable {
 
     function validateStakingPeriod(stake memory _investor) internal view returns(bool) {
         uint256 stakingTimeStamp = _investor.timestamp + getStakingPeriodInNumbers(_investor);
-        // return block.timestamp >= stakingTimeStamp;  // use this for mainnet
-        return true; // for testing only
+        return block.timestamp >= stakingTimeStamp;  // use this for mainnet
+        // return true; // for testing only
     } 
 
     function getStakingPeriodInNumbers(stake memory _investor) internal view returns (uint256){
